@@ -19,21 +19,21 @@ spec:
             - containerPort: 8080
           env:
             - name: Urls__Users
-              value: "http://restaurant-rest-service:80"
+              value: "http://restaurant-rest-service:8080"
             - name: Urls__Items
               value: "http://restaurant-go-service:8000"
             - name: Urls__Orders
-              value: "http://restaurant-async-service:80"
+              value: "http://restaurant-async-service:8080"
       initContainers:
         - name: check-restaurant-rest-service
           image: busybox:1.36.1
-          command: ['sh', '-c', 'until wget -qO- http://restaurant-rest-service:80/healthz; do echo waiting for restaurant-rest-service; sleep 2; done;']
+          command: ['sh', '-c', 'until wget -qO- http://restaurant-rest-service:8080/healthz; do echo waiting for restaurant-rest-service; sleep 2; done;']
         - name: check-restaurant-go-service
           image: busybox:1.36.1
           command: ['sh', '-c', 'until wget -qO- http://restaurant-go-service:8000/healthz; do echo waiting for restaurant-go-service; sleep 2; done;']
         - name: check-restaurant-async-service
           image: busybox:1.36.1
-          command: ['sh', '-c', 'until wget -qO- http://restaurant-async-service:80/healthz; do echo waiting for restaurant-async-service; sleep 2; done;']
+          command: ['sh', '-c', 'until wget -qO- http://restaurant-async-service:8080/healthz; do echo waiting for restaurant-async-service; sleep 2; done;']
 ---
 apiVersion: v1
 kind: Service
@@ -45,5 +45,5 @@ spec:
     app: restaurant-gateway
   ports:
     - protocol: TCP
-      port: 80
-      targetPort: 80
+      port: 8080
+      targetPort: 8080
